@@ -1,0 +1,21 @@
+version: "3.3"
+services:
+  mongodb:
+    image: mongo:3.6.4-jessie
+    volumes:
+    - type: bind
+      source: ./data/db
+      target: /data/db
+  yapi:
+    image: warmworm/yapi:1.4.3 
+    #command: tail -f /etc/hostname
+    command: sh -c "sleep 5; [ ! -e ../log/init.lock ] && npm run install-server && touch ../log/init.lock; npm run start"
+    ports:
+    - 3000:3000
+    volumes:
+    - type: bind
+      source: ./data/cnf.d
+      target: /opt/yapi/cnf.d
+    - type: bind
+      source: ./data/log
+      target: /opt/yapi/log
